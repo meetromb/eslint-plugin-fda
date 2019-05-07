@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-fda",
-  "version": "0.0.2",
+  "version": "0.1.1",
   "description": "This plugin provides a rules for correct using FDA",
   "keywords": [
     "eslint",
@@ -12,6 +12,7 @@
     "rematch"
   ],
   "author": "meetromb",
+  "repository": "https://github.com/meetromb/eslint-plugin-fda",
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha tests --recursive"
