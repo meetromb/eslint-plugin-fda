@@ -1,5 +1,5 @@
 /**
- * @fileoverview Prohibits direct use of feature reducers
+ * @fileoverview Prohibits direct use of rematch state
  * @author meetromb
  */
 "use strict";
@@ -8,25 +8,24 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-var rule = require("../../../lib/rules/no-direct-reducer-use"),
+const rule = require("../../../lib/rules/no-direct-use-rematch-state")
+const RuleTester = require("eslint").RuleTester;
 
-    RuleTester = require("eslint").RuleTester;
-
-    RuleTester.setDefaultConfig({
-        parserOptions: {
-          ecmaVersion: 6,
-          sourceType: "module"
-        }
-      });
+RuleTester.setDefaultConfig({
+    parserOptions: {
+        ecmaVersion: 6,
+        sourceType: "module"
+    }
+});
 
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
-var ruleTester = new RuleTester();
+const ruleTester = new RuleTester();
 
-ruleTester.run("no-direct-reducer-use", rule, {
+ruleTester.run("no-direct-use-rematch-state", rule, {
 
     valid: [
         `const mapDispatch = (state) => ({
@@ -34,16 +33,29 @@ ruleTester.run("no-direct-reducer-use", rule, {
         })
         
         connect(null, mapDispatch)`,
-        `const randomName = (state) => ({
+        `let randomName = (state) => ({
             someAction: () => makeSomeAction(state)
         })
         
         connect(null, randomName)`,
-        `const mapDispatch = (state) => ({
+        `const mapState = (state) => ({
+            someStateField: selector(state)
+        })
+        
+        const mapDispatch = (state) => ({
             someAction: () => makeSomeAction(state)
         })
         
-        connect(null, mapDispatch)`,
+        connect(mapState, mapDispatch)`,
+        `const mapState = (state) => ({
+            someStateField: selector(state)
+        })
+        
+        const mapDispatch = (state) => ({
+            someAction: () => makeSomeAction(state)
+        })
+        
+        connect(mapState, null)`,
     ],
 
     invalid: [
@@ -109,6 +121,57 @@ ruleTester.run("no-direct-reducer-use", rule, {
             })
             
             connect(null, mapDispatch)`,
+            errors: [{
+                message: "You can`t get reducer from state. Use public api of entity.",
+                type: "VariableDeclaration"
+            }]
+        },
+        {
+            code: `const mapState = (state) => ({
+                fromState: state.some.param
+            })
+            
+            const mapDispatch = ({ featureA, featureB }) => ({
+                someAction: () => featureA.makeSomeAction(),
+                anotherAction: () => featureB.makeAnotherAction()
+            })
+            
+            connect(mapState, mapDispatch)`,
+            errors: [{
+                message: "You can`t get reducer from state. Use public api of entity.",
+                type: "VariableDeclaration"
+            },
+            {
+                message: "You can`t get reducer from state. Use public api of entity.",
+                type: "VariableDeclaration"
+            }]
+        },
+        {
+            code: `const mapState = ({ featureState }) => ({
+                fromState: featureState
+            })
+            
+            const mapDispatch = ({ featureA, featureB }) => ({
+                someAction: () => featureA.makeSomeAction(),
+                anotherAction: () => featureB.makeAnotherAction()
+            })
+            
+            connect(mapState, mapDispatch)`,
+            errors: [{
+                message: "You can`t get reducer from state. Use public api of entity.",
+                type: "VariableDeclaration"
+            },
+            {
+                message: "You can`t get reducer from state. Use public api of entity.",
+                type: "VariableDeclaration"
+            }]
+        },
+        {
+            code: `const mapState = ({ featureState }) => ({
+                fromState: featureState
+            })
+            
+            connect(mapState, null)`,
             errors: [{
                 message: "You can`t get reducer from state. Use public api of entity.",
                 type: "VariableDeclaration"

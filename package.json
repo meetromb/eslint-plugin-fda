@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-fda",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This plugin provides a rules for correct using FDA",
   "keywords": [
     "eslint",
@@ -8,7 +8,8 @@
     "eslint-plugin",
     "fda",
     "feature-driven-architecture",
-    "feature-based"
+    "feature-based",
+    "rematch"
   ],
   "author": "meetromb",
   "main": "lib/index.js",
