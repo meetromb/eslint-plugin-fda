@@ -43,7 +43,7 @@ Then configure the rules you want to use under the rules section.
 
 ## Supported Rules
 
-`no-direct-use-rematch-state`
+- [no-direct-use-rematch-state](docs/rules/no-direct-use-rematch-state.md): Prohibits direct use of the state. Works with rematch.
 
 
 
