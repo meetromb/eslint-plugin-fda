@@ -14,6 +14,8 @@ const mapDispatchToProps = ({ featureA }) => ({
   someAction: () => featureA.makeSomeAction()
 })
 
+connect(mapStateToProps, mapDispatchToProps)
+
 ```
 
 Examples of **correct** code for this rule:
@@ -28,5 +30,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = state => ({
   someAction: () => makeSomeAction(state)
 })
+
+connect(mapStateToProps, mapDispatchToProps)
 
 ```
